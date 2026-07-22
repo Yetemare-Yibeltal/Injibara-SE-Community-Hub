@@ -36,7 +36,7 @@ const logger = winston.createLogger({
 if (!config.isProduction) {
   logger.add(
     new winston.transports.Console({
-      format: winston.format.combine(winston.format.colorize(), logFormat),
+      format: logFormat,
     }),
   );
 }
