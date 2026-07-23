@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authRoutes from "./auth.routes";
 
 const router = Router();
 
@@ -11,9 +12,10 @@ router.get("/health", (_req, res) => {
   });
 });
 
-// Individual feature routes will be mounted here as they are built
+router.use("/auth", authRoutes);
+
+// Additional feature routes will be mounted here as they are built
 // in later phases, for example:
-// router.use('/auth', authRoutes);
 // router.use('/users', userRoutes);
 
 export default router;
