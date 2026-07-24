@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { loginSchema, setPasswordSchema } from "@shared/validation/auth.schema";
+import {
+  loginSchema,
+  setPasswordSchema,
+  refreshTokenSchema,
+} from "@shared/validation/auth.schema";
 import * as authService from "../services/auth.service";
 import { asyncHandler } from "../utils/asyncHandler.util";
 import { sendSuccess } from "../utils/apiResponse.util";
@@ -32,13 +36,17 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
-  const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME];
+  const parsed = refreshTokenSchema.safeParse({
+    refreshToken: req.cookies?.[REFRESH_COOKIE_NAME],
+  });
 
-  if (!refreshToken) {
+  if (!parsed.success || !parsed.data.refreshToken) {
     throw new ApiError(401, "No refresh token provided");
   }
 
-  const accessToken = await authService.refreshAccessToken(refreshToken);
+  const accessToken = await authService.refreshAccessToken(
+    parsed.data.refreshToken,
+  );
 
   return sendSuccess(res, 200, "Token refreshed", { accessToken });
 });
