@@ -7,6 +7,7 @@
     "dev": "nodemon --watch src --watch ../shared --exec \"ts-node -r tsconfig-paths/register src/server.ts\"",
     "build": "tsc -p tsconfig.json",
     "start": "node -r tsconfig-paths/register dist/server/src/server.js",
+    "seed": "ts-node -r tsconfig-paths/register src/scripts/seed.ts",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest --runInBand"
   },
@@ -53,3 +54,4 @@
     "typescript": "^5.4.5"
   }
 }
+
