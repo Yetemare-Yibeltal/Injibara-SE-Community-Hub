@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { loginSchema } from "@shared/validation/auth.schema";
+import { loginSchema, setPasswordSchema } from "@shared/validation/auth.schema";
 import * as authService from "../services/auth.service";
 import { asyncHandler } from "../utils/asyncHandler.util";
 import { sendSuccess } from "../utils/apiResponse.util";
@@ -83,3 +83,19 @@ export const changePassword = asyncHandler(
     return sendSuccess(res, 200, "Password changed successfully");
   },
 );
+
+export const setPassword = asyncHandler(async (req: Request, res: Response) => {
+  const parsed = setPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    throw new ApiError(400, parsed.error.issues[0]?.message || "Invalid input");
+  }
+
+  const { identifier, newPassword } = parsed.data;
+  await authService.activateAccount(identifier, newPassword);
+
+  return sendSuccess(
+    res,
+    200,
+    "Password set successfully. You can now log in.",
+  );
+});
