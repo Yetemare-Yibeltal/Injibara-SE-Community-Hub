@@ -7,6 +7,7 @@ const router = Router();
 router.post("/login", authController.login);
 router.post("/refresh", authController.refresh);
 router.post("/logout", authController.logout);
+router.post("/set-password", authController.setPassword);
 router.patch("/change-password", requireAuth, authController.changePassword);
 
 export default router;
