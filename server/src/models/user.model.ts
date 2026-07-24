@@ -95,7 +95,6 @@ const userSchema = new Schema<IUser>(
   { timestamps: true },
 );
 
-userSchema.index({ studentId: 1 }, { unique: true });
 userSchema.index({ batch: 1 });
 
 userSchema.pre("save", async function (next) {
