@@ -160,3 +160,35 @@ export async function changePassword(
   account.passwordHash = newPassword;
   await account.save();
 }
+
+export async function activateAccount(
+  identifier: string,
+  newPassword: string,
+): Promise<void> {
+  const student = await User.findOne({ studentId: identifier });
+  const teacher = !student
+    ? await Teacher.findOne({ teacherId: identifier })
+    : null;
+
+  const account = student || teacher;
+
+  if (!account) {
+    throw new ApiError(404, "Account not found");
+  }
+
+  if (student && student.status !== "pending") {
+    throw new ApiError(400, "This account has already been activated");
+  }
+
+  if (teacher && teacher.status !== "pending_approval") {
+    throw new ApiError(400, "This account has already set its password");
+  }
+
+  account.passwordHash = newPassword;
+
+  if (student) {
+    student.status = "active";
+  }
+
+  await account.save();
+}
