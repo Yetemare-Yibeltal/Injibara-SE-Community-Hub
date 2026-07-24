@@ -115,7 +115,6 @@ const teacherSchema = new Schema<ITeacher>(
   { timestamps: true },
 );
 
-teacherSchema.index({ teacherId: 1 }, { unique: true });
 teacherSchema.index({ "assignedCourses.courseId": 1 });
 
 teacherSchema.pre("save", async function (next) {
