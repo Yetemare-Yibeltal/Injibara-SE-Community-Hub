@@ -30,6 +30,7 @@ export interface ITeacher extends Document {
   status: "pending_approval" | "active" | "suspended";
   assignedCourses: IAssignedCourse[];
   profile: ITeacherProfile;
+  blockedUserIds: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -110,6 +111,10 @@ const teacherSchema = new Schema<ITeacher>(
     profile: {
       type: teacherProfileSchema,
       default: () => ({}),
+    },
+    blockedUserIds: {
+      type: [Schema.Types.ObjectId],
+      default: [],
     },
   },
   { timestamps: true },
