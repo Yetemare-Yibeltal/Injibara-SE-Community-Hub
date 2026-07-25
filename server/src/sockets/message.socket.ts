@@ -15,6 +15,11 @@ interface SendMessagePayload {
   replyTo?: string;
 }
 
+interface ReadMessagesPayload {
+  chatId: string;
+  messageIds: string[];
+}
+
 export function registerMessageHandlers(
   io: Server,
   socket: AuthenticatedSocket,
@@ -49,6 +54,28 @@ export function registerMessageHandlers(
         `Failed to save message: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
       socket.emit("message:error", { message: "Failed to send message" });
+    }
+  });
+
+  socket.on("message:read", async (payload: ReadMessagesPayload) => {
+    if (!socket.user) return;
+
+    try {
+      await Message.updateMany(
+        { _id: { $in: payload.messageIds }, chatId: payload.chatId },
+        { $addToSet: { readBy: socket.user.id } },
+      );
+
+      io.to(payload.chatId).emit("message:read", {
+        chatId: payload.chatId,
+        messageIds: payload.messageIds,
+        userId: socket.user.id,
+      });
+    } catch (error) {
+      logger.error(
+        `Failed to mark messages as read: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+      socket.emit("message:error", { message: "Failed to update read status" });
     }
   });
 }
