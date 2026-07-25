@@ -119,3 +119,35 @@ export async function togglePinMessage(messageId: string): Promise<IMessage> {
 
   return message;
 }
+
+export async function forwardMessage(
+  messageId: string,
+  userId: string,
+  userRole: "student" | "teacher",
+  targetChatId: string,
+  ctx: AccessContext,
+): Promise<IMessage> {
+  const original = await Message.findById(messageId);
+
+  if (!original) {
+    throw new ApiError(404, "Original message not found");
+  }
+
+  if (original.deletedForEveryone) {
+    throw new ApiError(400, "Cannot forward a deleted message");
+  }
+
+  await getChatById(targetChatId, ctx);
+
+  const forwarded = await Message.create({
+    chatId: targetChatId,
+    senderId: userId,
+    senderRole: userRole,
+    content: original.content,
+    type: original.type,
+    attachmentUrl: original.attachmentUrl,
+    forwardedFrom: original._id,
+  });
+
+  return forwarded;
+}
