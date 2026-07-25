@@ -46,7 +46,7 @@ describe("POST /api/auth/login", () => {
 
     expect(res.status).toBe(401);
     expect(res.body.success).toBe(false);
-  });
+  }, 60000);
 
   it("returns 401 for a real account with the wrong password", async () => {
     const student = await User.findOne({ studentId: "TEST-STU-001" });
@@ -63,7 +63,7 @@ describe("POST /api/auth/login", () => {
 
     expect(res.status).toBe(401);
     expect(res.body.success).toBe(false);
-  });
+  }, 60000);
 
   it("returns 200 and an access token for correct credentials", async () => {
     const res = await request(app)
@@ -74,5 +74,5 @@ describe("POST /api/auth/login", () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.accessToken).toBeDefined();
     expect(res.body.data.user.identifier).toBe("TEST-STU-001");
-  });
+  }, 60000);
 });

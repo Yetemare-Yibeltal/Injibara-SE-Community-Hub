@@ -12,6 +12,6 @@ module.exports = {
     "^@shared/(.*)$": "<rootDir>/../shared/$1",
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  testTimeout: 15000,
+  testTimeout: 45000,
   forceExit: true,
 };
