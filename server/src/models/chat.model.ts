@@ -8,6 +8,7 @@ export interface IChat extends Document {
   batchScope?: string;
   courseId?: Types.ObjectId;
   memberIds: Types.ObjectId[];
+  mutedBy: Types.ObjectId[];
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +37,10 @@ const chatSchema = new Schema<IChat>(
       default: null,
     },
     memberIds: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+    },
+    mutedBy: {
       type: [Schema.Types.ObjectId],
       default: [],
     },
