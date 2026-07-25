@@ -22,6 +22,7 @@ export interface IMessage extends Document {
   type: MessageType;
   attachmentUrl?: string;
   replyTo?: Types.ObjectId;
+  forwardedFrom?: Types.ObjectId;
   reactions: IReaction[];
   editedAt?: Date;
   deletedForEveryone: boolean;
@@ -74,6 +75,11 @@ const messageSchema = new Schema<IMessage>(
       default: null,
     },
     replyTo: {
+      type: Schema.Types.ObjectId,
+      ref: "Message",
+      default: null,
+    },
+    forwardedFrom: {
       type: Schema.Types.ObjectId,
       ref: "Message",
       default: null,
