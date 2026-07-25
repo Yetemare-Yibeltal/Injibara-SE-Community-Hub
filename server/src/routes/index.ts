@@ -1,5 +1,7 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes";
+import chatRoutes from "./chat.routes";
+import messageRoutes from "./message.routes";
 
 const router = Router();
 
@@ -13,10 +15,11 @@ router.get("/health", (_req, res) => {
 });
 
 router.use("/auth", authRoutes);
+router.use("/chats", chatRoutes);
+router.use("/messages", messageRoutes);
 
 // Additional feature routes will be mounted here as they are built
 // in later phases, for example:
 // router.use('/users', userRoutes);
 
 export default router;
- 
