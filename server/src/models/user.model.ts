@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model, Types } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface IUserProfile {
@@ -26,6 +26,7 @@ export interface IUser extends Document {
   joinedAt: Date;
   status: "pending" | "active" | "suspended" | "alumni";
   profile: IUserProfile;
+  blockedUserIds: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -90,6 +91,10 @@ const userSchema = new Schema<IUser>(
     profile: {
       type: userProfileSchema,
       default: () => ({}),
+    },
+    blockedUserIds: {
+      type: [Schema.Types.ObjectId],
+      default: [],
     },
   },
   { timestamps: true },
