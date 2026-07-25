@@ -185,3 +185,51 @@ must match what is defined here. If something needs to change, update this file 
 ## 2. API Endpoint Plan
 
 ### Auth — `/api/auth`
+
+---
+
+## 3. UI Planning
+
+### Page Inventory
+
+| Page                      | Route                      | Access        | Phase              |
+| ------------------------- | -------------------------- | ------------- | ------------------ |
+| Landing                   | `/`                        | Public        | 6                  |
+| Login                     | `/login`                   | Public        | 6                  |
+| Set Password (activation) | `/activate`                | Public        | 6                  |
+| Dashboard                 | `/dashboard`               | Authenticated | 6                  |
+| Profile                   | `/profile`                 | Authenticated | 6                  |
+| 404                       | `*`                        | Public        | 6                  |
+| Chats                     | `/chats`, `/chats/:chatId` | Authenticated | 7                  |
+| Groups                    | `/groups`                  | Authenticated | 8                  |
+| Files                     | `/files`                   | Authenticated | 9                  |
+| Courses                   | `/courses`, `/courses/:id` | Authenticated | 10                 |
+| Notifications             | `/notifications`           | Authenticated | 11                 |
+| Admin Dashboard           | `/admin/*`                 | Admin only    | 12                 |
+| Search                    | `/search`                  | Authenticated | Later              |
+| Settings                  | `/settings`                | Authenticated | Later              |
+| About                     | `/about`                   | Public        | Needs real content |
+| Help Center               | `/help`                    | Public        | Later              |
+| Privacy Policy            | `/privacy`                 | Public        | Before deployment  |
+| Terms                     | `/terms`                   | Public        | Before deployment  |
+
+### Layout Structure
+
+### Design System
+
+| Element                                                 | Decision                                                                       |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Font                                                    | Inter (Google Fonts)                                                           |
+| Theme                                                   | Dark mode default, light mode toggle                                           |
+| Heavy visual effects (glassmorphism, gradients, aurora) | Landing, Login, Dashboard chrome only — never chat message lists (performance) |
+| Icons                                                   | Lucide React                                                                   |
+| Spacing                                                 | Tailwind defaults, mobile-first breakpoints                                    |
+
+### State Management
+
+| Concern         | Tool                                                                |
+| --------------- | ------------------------------------------------------------------- |
+| Server data     | TanStack Query                                                      |
+| Client UI state | Redux Toolkit                                                       |
+| Real-time       | Socket.IO client -> feeds TanStack Query cache                      |
+| Forms           | React Hook Form + Zod (reuses `shared/validation` schemas directly) |
