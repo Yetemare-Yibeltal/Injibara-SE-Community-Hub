@@ -3,6 +3,7 @@ import app from "./app";
 import { config } from "./config/env.config";
 import { connectDB, disconnectDB } from "./config/db.config";
 import { initSocket } from "./config/socket.config";
+import { initializeSocketHandlers } from "./sockets/index";
 import logger from "./config/logger.config";
 
 const httpServer = createServer(app);
@@ -12,6 +13,7 @@ async function startServer(): Promise<void> {
     await connectDB();
 
     initSocket(httpServer);
+    initializeSocketHandlers();
 
     httpServer.listen(config.port, () => {
       logger.info(
