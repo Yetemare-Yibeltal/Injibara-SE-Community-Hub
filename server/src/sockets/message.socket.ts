@@ -1,6 +1,10 @@
 import { Server } from "socket.io";
 import { AuthenticatedSocket } from "./index";
-import Message from "../models/message.model";
+import Message, { IMessage } from "../models/message.model";
+import User from "../models/user.model";
+import Teacher from "../models/teacher.model";
+import Notification from "../models/notification.model";
+import { emitNotificationToUser } from "./notification.socket";
 import logger from "../config/logger.config";
 
 interface JoinChatPayload {
@@ -18,6 +22,43 @@ interface SendMessagePayload {
 interface ReadMessagesPayload {
   chatId: string;
   messageIds: string[];
+}
+
+const MENTION_REGEX = /@([A-Za-z0-9_-]+)/g;
+
+async function processMentions(
+  io: Server,
+  message: IMessage,
+  senderId: string,
+): Promise<void> {
+  const matches = message.content.matchAll(MENTION_REGEX);
+  const identifiers = Array.from(new Set(Array.from(matches, (m) => m[1])));
+
+  if (identifiers.length === 0) return;
+
+  for (const identifier of identifiers) {
+    const student = await User.findOne({ studentId: identifier });
+    const teacher = !student
+      ? await Teacher.findOne({ teacherId: identifier })
+      : null;
+    const account = student || teacher;
+
+    if (!account || account._id.toString() === senderId) continue;
+
+    const notification = await Notification.create({
+      recipientId: account._id,
+      type: "mention",
+      sourceId: message._id,
+      read: false,
+    });
+
+    emitNotificationToUser(
+      io,
+      account._id.toString(),
+      "notification:new",
+      notification,
+    );
+  }
 }
 
 export function registerMessageHandlers(
@@ -49,6 +90,8 @@ export function registerMessageHandlers(
       });
 
       io.to(payload.chatId).emit("message:new", message);
+
+      await processMentions(io, message, socket.user.id);
     } catch (error) {
       logger.error(
         `Failed to save message: ${error instanceof Error ? error.message : "Unknown error"}`,
