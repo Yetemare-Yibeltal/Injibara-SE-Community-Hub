@@ -31,6 +31,7 @@ export interface ITeacher extends Document {
   assignedCourses: IAssignedCourse[];
   profile: ITeacherProfile;
   blockedUserIds: Types.ObjectId[];
+  lastSeenAt: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -115,6 +116,10 @@ const teacherSchema = new Schema<ITeacher>(
     blockedUserIds: {
       type: [Schema.Types.ObjectId],
       default: [],
+    },
+    lastSeenAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true },
