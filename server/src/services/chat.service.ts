@@ -130,3 +130,62 @@ export async function toggleMuteChat(
   await chat.save();
   return chat;
 }
+
+export async function addMembersToGroup(
+  chatId: string,
+  ctx: AccessContext,
+  newMemberIds: string[],
+): Promise<IChat> {
+  const chat = await getChatById(chatId, ctx);
+
+  if (chat.type !== "custom" && chat.type !== "private") {
+    throw new ApiError(400, "Can only add members to custom or private chats");
+  }
+
+  const existingIds = new Set(chat.memberIds.map((id) => id.toString()));
+  const toAdd = newMemberIds.filter((id) => !existingIds.has(id));
+
+  chat.memberIds.push(...toAdd.map((id) => new Types.ObjectId(id)));
+
+  if (chat.type === "private" && chat.memberIds.length > 2) {
+    chat.type = "custom";
+  }
+
+  await chat.save();
+  return chat;
+}
+
+export async function removeMemberFromGroup(
+  chatId: string,
+  ctx: AccessContext,
+  targetUserId: string,
+): Promise<IChat> {
+  const chat = await getChatById(chatId, ctx);
+
+  if (chat.type !== "custom" && chat.type !== "private") {
+    throw new ApiError(
+      400,
+      "Can only remove members from custom or private chats",
+    );
+  }
+
+  chat.memberIds = chat.memberIds.filter(
+    (id) => id.toString() !== targetUserId,
+  );
+  await chat.save();
+  return chat;
+}
+
+export async function leaveGroup(
+  chatId: string,
+  ctx: AccessContext,
+): Promise<void> {
+  const chat = await getChatById(chatId, ctx);
+
+  if (chat.type !== "custom" && chat.type !== "private") {
+    throw new ApiError(400, "Can only leave custom or private chats");
+  }
+
+  chat.memberIds = chat.memberIds.filter((id) => id.toString() !== ctx.userId);
+  await chat.save();
+}
