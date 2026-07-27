@@ -62,3 +62,37 @@ export const toggleMuteChat = asyncHandler(
     return sendSuccess(res, 200, "Chat mute status updated", chat);
   },
 );
+
+export const addMembers = asyncHandler(async (req: Request, res: Response) => {
+  const ctx = getAccessContext(req);
+  const { memberIds } = req.body as { memberIds?: string[] };
+
+  if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
+    throw new ApiError(400, "At least one member ID is required");
+  }
+
+  const chat = await chatService.addMembersToGroup(
+    req.params.id,
+    ctx,
+    memberIds,
+  );
+  return sendSuccess(res, 200, "Members added", chat);
+});
+
+export const removeMember = asyncHandler(
+  async (req: Request, res: Response) => {
+    const ctx = getAccessContext(req);
+    const chat = await chatService.removeMemberFromGroup(
+      req.params.id,
+      ctx,
+      req.params.userId,
+    );
+    return sendSuccess(res, 200, "Member removed", chat);
+  },
+);
+
+export const leaveGroup = asyncHandler(async (req: Request, res: Response) => {
+  const ctx = getAccessContext(req);
+  await chatService.leaveGroup(req.params.id, ctx);
+  return sendSuccess(res, 200, "Left the group");
+});
