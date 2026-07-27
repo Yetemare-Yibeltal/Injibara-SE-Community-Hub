@@ -27,6 +27,7 @@ export interface IUser extends Document {
   status: "pending" | "active" | "suspended" | "alumni";
   profile: IUserProfile;
   blockedUserIds: Types.ObjectId[];
+  lastSeenAt: Date;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -95,6 +96,10 @@ const userSchema = new Schema<IUser>(
     blockedUserIds: {
       type: [Schema.Types.ObjectId],
       default: [],
+    },
+    lastSeenAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true },
