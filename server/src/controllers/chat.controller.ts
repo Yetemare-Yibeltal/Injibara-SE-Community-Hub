@@ -96,3 +96,15 @@ export const leaveGroup = asyncHandler(async (req: Request, res: Response) => {
   await chatService.leaveGroup(req.params.id, ctx);
   return sendSuccess(res, 200, "Left the group");
 });
+
+export const renameGroup = asyncHandler(async (req: Request, res: Response) => {
+  const ctx = getAccessContext(req);
+  const { name } = req.body as { name?: string };
+
+  if (!name || name.trim().length === 0) {
+    throw new ApiError(400, "A new name is required");
+  }
+
+  const chat = await chatService.renameGroup(req.params.id, ctx, name.trim());
+  return sendSuccess(res, 200, "Group renamed", chat);
+});
