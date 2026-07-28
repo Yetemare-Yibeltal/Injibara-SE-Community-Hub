@@ -3,6 +3,7 @@ import authRoutes from "./auth.routes";
 import chatRoutes from "./chat.routes";
 import messageRoutes from "./message.routes";
 import moderationRoutes from "./moderation.routes";
+import fileRoutes from "./file.routes";
 
 const router = Router();
 
@@ -19,6 +20,7 @@ router.use("/auth", authRoutes);
 router.use("/chats", chatRoutes);
 router.use("/messages", messageRoutes);
 router.use("/", moderationRoutes);
+router.use("/files", fileRoutes);
 
 // Additional feature routes will be mounted here as they are built
 // in later phases, for example:
