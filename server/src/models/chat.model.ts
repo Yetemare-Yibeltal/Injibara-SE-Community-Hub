@@ -9,6 +9,7 @@ export interface IChat extends Document {
   courseId?: Types.ObjectId;
   memberIds: Types.ObjectId[];
   mutedBy: Types.ObjectId[];
+  creatorId?: Types.ObjectId;
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -43,6 +44,10 @@ const chatSchema = new Schema<IChat>(
     mutedBy: {
       type: [Schema.Types.ObjectId],
       default: [],
+    },
+    creatorId: {
+      type: Schema.Types.ObjectId,
+      default: null,
     },
     isArchived: {
       type: Boolean,
