@@ -98,6 +98,7 @@ export async function createCustomChat(
     type: uniqueMembers.length === 2 ? "private" : "custom",
     name,
     memberIds: uniqueMembers,
+    creatorId,
   });
 
   return chat;
@@ -169,9 +170,33 @@ export async function removeMemberFromGroup(
     );
   }
 
+  if (!chat.creatorId || chat.creatorId.toString() !== ctx.userId) {
+    throw new ApiError(403, "Only the group creator can remove members");
+  }
+
   chat.memberIds = chat.memberIds.filter(
     (id) => id.toString() !== targetUserId,
   );
+  await chat.save();
+  return chat;
+}
+
+export async function renameGroup(
+  chatId: string,
+  ctx: AccessContext,
+  newName: string,
+): Promise<IChat> {
+  const chat = await getChatById(chatId, ctx);
+
+  if (chat.type !== "custom" && chat.type !== "private") {
+    throw new ApiError(400, "Can only rename custom or private chats");
+  }
+
+  if (!chat.creatorId || chat.creatorId.toString() !== ctx.userId) {
+    throw new ApiError(403, "Only the group creator can rename this group");
+  }
+
+  chat.name = newName;
   await chat.save();
   return chat;
 }
