@@ -1,20 +1,28 @@
-import { Router } from "express";
-import * as chatController from "../controllers/chat.controller";
-import { requireAuth } from "../middlewares/auth.middleware";
-import { attachBatchAccess } from "../middlewares/batchAccess.middleware";
+import multer, { FileFilterCallback } from "multer";
+import { Request } from "express";
+import { ALLOWED_FILE_TYPES } from "@shared/validation/file.schema";
+import { config } from "../config/env.config";
 
-const router = Router();
+const storage = multer.memoryStorage();
 
-router.use(requireAuth, attachBatchAccess);
+function fileFilter(
+  _req: Request,
+  file: Express.Multer.File,
+  callback: FileFilterCallback,
+): void {
+  const allowed = ALLOWED_FILE_TYPES as readonly string[];
 
-router.get("/", chatController.listChats);
-router.get("/:id", chatController.getChat);
-router.post("/", chatController.createChat);
-router.patch("/:id/archive", chatController.archiveChat);
-router.patch("/:id/mute", chatController.toggleMuteChat);
-router.patch("/:id/rename", chatController.renameGroup);
-router.post("/:id/members", chatController.addMembers);
-router.delete("/:id/members/:userId", chatController.removeMember);
-router.post("/:id/leave", chatController.leaveGroup);
+  if (allowed.includes(file.mimetype)) {
+    callback(null, true);
+  } else {
+    callback(new Error(`File type "${file.mimetype}" is not allowed`));
+  }
+}
 
-export default router;
+export const uploadSingleFile = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: config.maxFileUploadSizeMb * 1024 * 1024,
+  },
+}).single("file");
