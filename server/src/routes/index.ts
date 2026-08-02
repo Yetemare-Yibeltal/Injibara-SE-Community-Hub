@@ -4,6 +4,8 @@ import chatRoutes from "./chat.routes";
 import messageRoutes from "./message.routes";
 import moderationRoutes from "./moderation.routes";
 import fileRoutes from "./file.routes";
+import courseRoutes from "./course.routes";
+import announcementRoutes from "./announcement.routes";
 
 const router = Router();
 
@@ -21,6 +23,8 @@ router.use("/chats", chatRoutes);
 router.use("/messages", messageRoutes);
 router.use("/", moderationRoutes);
 router.use("/files", fileRoutes);
+router.use("/courses", courseRoutes);
+router.use("/announcements", announcementRoutes);
 
 // Additional feature routes will be mounted here as they are built
 // in later phases, for example:
