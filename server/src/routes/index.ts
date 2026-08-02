@@ -6,6 +6,7 @@ import moderationRoutes from "./moderation.routes";
 import fileRoutes from "./file.routes";
 import courseRoutes from "./course.routes";
 import announcementRoutes from "./announcement.routes";
+import notificationRoutes from "./notification.routes";
 
 const router = Router();
 
@@ -25,6 +26,7 @@ router.use("/", moderationRoutes);
 router.use("/files", fileRoutes);
 router.use("/courses", courseRoutes);
 router.use("/announcements", announcementRoutes);
+router.use("/notifications", notificationRoutes);
 
 // Additional feature routes will be mounted here as they are built
 // in later phases, for example:
