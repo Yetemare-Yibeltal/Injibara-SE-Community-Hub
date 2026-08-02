@@ -7,6 +7,7 @@ import fileRoutes from "./file.routes";
 import courseRoutes from "./course.routes";
 import announcementRoutes from "./announcement.routes";
 import notificationRoutes from "./notification.routes";
+import adminRoutes from "./admin.routes";
 
 const router = Router();
 
@@ -27,9 +28,6 @@ router.use("/files", fileRoutes);
 router.use("/courses", courseRoutes);
 router.use("/announcements", announcementRoutes);
 router.use("/notifications", notificationRoutes);
-
-// Additional feature routes will be mounted here as they are built
-// in later phases, for example:
-// router.use('/users', userRoutes);
+router.use("/admin", adminRoutes);
 
 export default router;
