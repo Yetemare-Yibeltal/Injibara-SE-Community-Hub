@@ -1,6 +1,7 @@
 import { connectDB, disconnectDB } from "../config/db.config";
 import User from "../models/user.model";
 import Teacher from "../models/teacher.model";
+import Admin from "../models/admin.model";
 import logger from "../config/logger.config";
 
 async function seed(): Promise<void> {
@@ -36,6 +37,21 @@ async function seed(): Promise<void> {
       assignedCourses: [],
     });
     logger.info("Test teacher created: TEST-TCH-001 / Password123");
+  }
+
+  const existingAdmin = await Admin.findOne({ adminId: "TEST-ADM-001" });
+  if (existingAdmin) {
+    logger.info("Test admin already exists, skipping creation.");
+  } else {
+    await Admin.create({
+      adminId: "TEST-ADM-001",
+      passwordHash: "Password123",
+      fullName: { first: "Test", middle: "Admin", last: "Account" },
+      email: "test.admin@example.com",
+      role: "admin",
+      status: "active",
+    });
+    logger.info("Test admin created: TEST-ADM-001 / Password123");
   }
 
   await disconnectDB();
