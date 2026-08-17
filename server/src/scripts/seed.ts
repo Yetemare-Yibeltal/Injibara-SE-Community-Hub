@@ -59,4 +59,9 @@ async function seed(): Promise<void> {
   process.exit(0);
 }
 
-
+seed().catch((error) => {
+  logger.error(
+    `Seeding failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+  );
+  process.exit(1);
+});
