@@ -25,14 +25,3 @@ export function sendSuccess<T>(
   return res.status(statusCode).json(body);
 }
 
-export function sendError(
-  res: Response,
-  statusCode: number,
-  message: string,
-): Response {
-  const body: ErrorResponse = {
-    success: false,
-    message,
-  };
-  return res.status(statusCode).json(body);
-}
