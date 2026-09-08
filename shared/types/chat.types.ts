@@ -1,4 +1,4 @@
-export type ChatType = "batch" | "course" | "department" | "private" | "custom";
+export type ChatType = 'batch' | 'course' | 'department' | 'private' | 'custom';
 
 export interface ChatDTO {
   id: string;
