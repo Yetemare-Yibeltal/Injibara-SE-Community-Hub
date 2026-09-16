@@ -1,7 +1,8 @@
-import { Bell, Search, LogOut } from 'lucide-react';
+import { Search, LogOut } from 'lucide-react';
 import { useAuth } from '../../features/auth/useAuth';
 import { logoutRequest } from '../../features/auth/authApi';
 import { useNavigate } from 'react-router-dom';
+import NotificationBell from '../../features/notifications/NotificationBell';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -28,9 +29,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="relative text-gray-400 hover:text-white transition-colors">
-          <Bell size={20} />
-        </button>
+        <NotificationBell />
 
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
