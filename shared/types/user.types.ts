@@ -52,4 +52,15 @@ export interface TeacherDTO {
   updatedAt: string;
 }
 
-export type AccountDTO = StudentDTO | TeacherDTO;
+export interface AdminDTO {
+  id: string;
+  adminId: string;
+  fullName: FullName;
+  email: string;
+  role: "admin";
+  status: "active" | "suspended";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type AccountDTO = StudentDTO | TeacherDTO | AdminDTO;
