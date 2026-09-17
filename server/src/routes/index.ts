@@ -1,5 +1,7 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes";
+import userRoutes from "./user.routes";
+router.use("/users", userRoutes);
 import chatRoutes from "./chat.routes";
 import messageRoutes from "./message.routes";
 import moderationRoutes from "./moderation.routes";
