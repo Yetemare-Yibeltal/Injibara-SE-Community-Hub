@@ -1,9 +1,16 @@
 import { useState } from 'react';
+import { createChat } from '../chat/chatApi';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { fetchChats } from '../chat/chatApi';
 import { Plus, Users } from 'lucide-react';
 import CreateGroupModal from './CreateGroupModal';
+export async function createGroup(
+  name: string,
+  memberIds: string[],
+) {
+  return createChat(name, memberIds);
+}
 
 export default function GroupList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
