@@ -1,6 +1,6 @@
 import { io, type Socket } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+const SOCKET_URL = "http://localhost:5000";
 
 let socket: Socket | null = null;
 
@@ -15,8 +15,12 @@ export function getSocket(): Socket {
   return socket;
 }
 
-export function connectSocket(): Socket {
+export function connectSocket(accessToken: string): Socket {
   const currentSocket = getSocket();
+
+  currentSocket.auth = {
+    token: accessToken,
+  };
 
   if (!currentSocket.connected) {
     currentSocket.connect();
