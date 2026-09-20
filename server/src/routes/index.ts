@@ -1,7 +1,5 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes";
-import userRoutes from "./user.routes";
-router.use("/users", userRoutes);
 import chatRoutes from "./chat.routes";
 import messageRoutes from "./message.routes";
 import moderationRoutes from "./moderation.routes";
@@ -10,6 +8,7 @@ import courseRoutes from "./course.routes";
 import announcementRoutes from "./announcement.routes";
 import notificationRoutes from "./notification.routes";
 import adminRoutes from "./admin.routes";
+import userRoutes from "./user.routes";
 
 const router = Router();
 
@@ -31,5 +30,6 @@ router.use("/courses", courseRoutes);
 router.use("/announcements", announcementRoutes);
 router.use("/notifications", notificationRoutes);
 router.use("/admin", adminRoutes);
+router.use("/users", userRoutes);
 
 export default router;
